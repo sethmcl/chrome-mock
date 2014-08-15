@@ -1,0 +1,12 @@
+language: node_js
+node_js:
+  - "0.10"
+
+before_script:
+  - npm install
+
+script:
+  - npm test
+
+after_success:
+  - cat ./coverage/unit/lcov.info|./node_modules/.bin/coveralls
