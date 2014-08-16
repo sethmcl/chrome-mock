@@ -1,4 +1,4 @@
-var Chrome = hmt.lib('chrome');
+var Chrome = hmt.lib('Chrome');
 
 describe('Chrome', function () {
   var chrome;

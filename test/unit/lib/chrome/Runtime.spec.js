@@ -1,55 +1,85 @@
 var Runtime = hmt.lib('chrome', 'Runtime');
+var Event   = hmt.lib('Event');
+var api     = new Runtime();
 
 describe('chrome.runtime', function () {
-  var api;
-
   beforeEach(function () {
     api = new Runtime();
   });
 
   describe('events', function () {
-    it('should have onStartup.addListener', function () {
-      hmt.assert.equal(typeof api.onStartup.addListener, 'function');
+    var events = [
+      'onStartup',
+      'onInstalled',
+      'onSuspend',
+      'onSuspendCanceled',
+      'onUpdateAvailable',
+      'onBrowserUpdateAvailable',
+      'onConnect',
+      'onConnectExternal',
+      'onMessage',
+      'onMessageExternal',
+      'onRestartRequired'
+    ];
+
+    events.forEach(function (eventName) {
+      testEvent(api, eventName);
+    });
+  });
+
+  describe('getBackgroundPage', function () {
+    var page;
+
+    beforeEach(function () {
+      api.getBackgroundPage(function (data) {
+        page = data;
+      });
     });
 
-    it('should have onInstalled.addListener', function () {
-      hmt.assert.equal(typeof api.onInstalled.addListener, 'function');
+    it('should return an object', function () {
+      hmt.assert.deepEqual({}, page);
+    });
+  });
+
+  describe('getManifest', function () {
+    var manifest;
+
+    beforeEach(function () {
+      manifest = api.getManifest();
     });
 
-    it('should have onSuspend.addListener', function () {
-      hmt.assert.equal(typeof api.onSuspend.addListener, 'function');
+    it('should be an object', function () {
+      hmt.assert.equal(typeof manifest, 'object');
     });
 
-    it('should have onSuspendCanceled.addListener', function () {
-      hmt.assert.equal(typeof api.onSuspendCanceled.addListener, 'function');
+    it('should have a version', function () {
+      hmt.assert.equal(manifest.version, '0.0.1');
     });
+  });
 
-    it('should have onUpdateAvailable.addListener', function () {
-      hmt.assert.equal(typeof api.onUpdateAvailable.addListener, 'function');
+  describe('getURL', function () {
+    it('should return the correct path', function () {
+      var url;
+
+      api.id = 9;
+      url = api.getURL('foo.js');
+      hmt.assert.equal(url, 'chrome://9/foo.js');
     });
+  });
 
-    it('should have onBrowserUpdateAvailable.addListener', function () {
-      hmt.assert.equal(typeof api.onBrowserUpdateAvailable.addListener, 'function');
-    });
-
-    it('should have onConnect.addListener', function () {
-      hmt.assert.equal(typeof api.onConnect.addListener, 'function');
-    });
-
-    it('should have onConnectExternal.addListener', function () {
-      hmt.assert.equal(typeof api.onConnectExternal.addListener, 'function');
-    });
-
-    it('should have onMessage.addListener', function () {
-      hmt.assert.equal(typeof api.onMessage.addListener, 'function');
-    });
-
-    it('should have onMessageExternal.addListener', function () {
-      hmt.assert.equal(typeof api.onMessageExternal.addListener, 'function');
-    });
-
-    it('should have onRestartRequired.addListener', function () {
-      hmt.assert.equal(typeof api.onRestartRequired.addListener, 'function');
+  describe('reload', function () {
+    it('should be a spy', function () {
+      hmt.assert.equal(api.reload.toString(), 'spy');
     });
   });
 });
+
+/**
+ * @param {Runtime} api
+ * @param {string} eventName
+ */
+function testEvent(api, eventName) {
+  it('should be an Event', function () {
+    hmt.assert.equal(api[eventName] instanceof Event, true);
+  });
+}
