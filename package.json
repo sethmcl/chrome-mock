@@ -26,6 +26,8 @@
     "coveralls": "~2.10.0",
     "mocha-lcov-reporter": "0.0.1",
     "help-me-test": "~0.0.1",
-    "grunt-release": "~0.7.0"
+    "grunt-release": "~0.7.0",
+    "grunt-browserify": "~2.1.4",
+    "load-grunt-tasks": "~0.6.0"
   }
 }

@@ -1,1 +1,3 @@
-module.exports = require('./lib/chrome');
+var Chrome = require('./lib/Chrome');
+
+module.exports = new Chrome();
