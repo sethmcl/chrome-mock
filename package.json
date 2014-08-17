@@ -8,7 +8,8 @@
   },
   "dependencies": {
     "require-dir": "^0.1.0",
-    "sinon": "^1.10.3"
+    "sinon": "^1.10.3",
+    "rfile": "~1.0.0"
   },
   "devDependencies": {
     "sinon": "~1.10.2",
@@ -28,6 +29,7 @@
     "help-me-test": "~0.0.1",
     "grunt-release": "~0.7.0",
     "grunt-browserify": "~2.1.4",
-    "load-grunt-tasks": "~0.6.0"
+    "load-grunt-tasks": "~0.6.0",
+    "ejs": "~1.0.0"
   }
 }

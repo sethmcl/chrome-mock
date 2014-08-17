@@ -1,0 +1,127 @@
+var Event = require('../Event');
+var sinon = require('sinon');
+
+module.exports = <%= namespaceCap %>;
+
+<%
+  function chunkString(str, limit, arr) {
+    str = str || '';
+    limit = limit || 80;
+    arr = arr || [];
+    str = str.replace(/^\s*/, '');
+
+    var endAt = limit;
+
+    if (str.length > limit) {
+      if (str[limit] !== ' ') {
+        endAt = limit + str.slice(limit).indexOf(' ');
+      }
+
+      arr.push(str.slice(0, endAt));
+      return chunkString(str.slice(endAt), limit, arr);
+    } else {
+      arr.push(str);
+      return arr;
+    }
+  }
+
+  function getCallbackParam(params) {
+    var cbParam = params.filter(function (param) {
+      return param.name.match(/callback/i);
+    })[0];
+
+    if (cbParam) {
+      return cbParam.name;
+    }
+  }
+
+  function limitStr(str, limit) {
+    str = str || '';
+
+    if (str.length <= limit) {
+      return str;
+    } else {
+      return str.slice(0, limit - 3) + '...';
+    }
+  }
+
+  function defaultValue(type) {
+    var values = {
+      'object': '{}',
+      'string': '\'\'',
+      'undefined': 'null',
+      'number': '1'
+    };
+
+    return values[type];
+  }
+%>
+
+/**
+ * <% chunkString(description, 80).forEach(function (line) { %>
+ * <%- line %>
+ * <% }); %>
+ * @constructor
+ * @param {object} chrome
+ */
+function <%= namespaceCap %>(chrome) {
+  this.chrome = chrome;
+
+  <%
+    if (typeof properties !== 'undefined') {
+      Object.keys(properties).forEach(function (propName) {
+        var prop = properties[propName];
+  %>
+  /**
+   * <% chunkString(prop.description, 80).forEach(function (line) { %>
+   * <%- line %>
+   * <% }); %>
+   * @property {<%= prop.type %>}
+   */
+  this.<%= propName %> = <%- defaultValue(prop.type) %>;
+  <% });} %>
+
+  <% 
+    if (typeof functions !== 'undefined') {
+    functions.forEach(function (fn) {
+  %>
+  /**
+   * <% chunkString(fn.description, 80).forEach(function (line) { %>
+   * <%- line %>
+   * <% }); %>
+   *
+   *
+   * <% fn.parameters.forEach(function (param) { %>
+   * @param {<%= param.type %>} <%= param.name %> <%- limitStr(param.description, 80) %>
+   * <% }); %>
+   *
+   * <% if (fn.returns) { %>
+   * @returns {<%= fn.returns.type %>} <%- limitStr(fn.returns.description, 80) %>
+   * <% } %>
+   */
+  this.<%= fn.name %> = sinon.spy(function (<%= fn.parameters.map(function (param) { return param.name; }).join(', ') %>) {
+    <%
+      var cbParam = getCallbackParam(fn.parameters);
+
+      if (getCallbackParam(fn.parameters)) {
+    %>
+    if (typeof <%= cbParam %> === 'function') {
+      <%= cbParam %>();
+    }
+    <% } %>
+  });
+
+  <%
+    });}
+  %>
+
+
+  <% events.forEach(function (evt) { %>
+  /**
+   * <% chunkString(evt.description, 80).forEach(function (line) { %>
+   * <%- line %>
+   * <% }); %>
+   */
+  this.<%= evt.name %> = new Event();
+  <% }); %>
+}
