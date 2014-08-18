@@ -1,6 +1,6 @@
 {
   "name": "chrome-mock",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "author": "Steven Foote & Seth McLaughlin",
   "license": "MIT",
   "scripts": {
