@@ -333,7 +333,7 @@ function Tabs(chrome) {
   this.query = sinon.spy(function (queryInfo, callback) {
 
     if (typeof callback === 'function') {
-      callback();
+      callback([{id: 0, id: 1}]);
     }
 
   });
