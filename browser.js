@@ -14,10 +14,17 @@ module.exports = Chrome;
  * @constructor
  */
 function Chrome() {
+  this.resetMock();
+}
+
+/**
+ * Re-initialize all mocks
+ */
+Chrome.prototype.resetMock = function () {
   this.contextMenus = new ContextMenus(this);
   this.runtime      = new Runtime(this);
   this.tabs         = new Tabs(this);
-}
+};
 
 },{"./chrome/ContextMenus":4,"./chrome/Runtime":5,"./chrome/Tabs":6}],3:[function(_dereq_,module,exports){
 var sinon = _dereq_('sinon');
