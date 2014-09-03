@@ -7,6 +7,8 @@ module.exports = new Chrome();
 var ContextMenus = _dereq_('./chrome/ContextMenus');
 var Runtime      = _dereq_('./chrome/Runtime');
 var Tabs         = _dereq_('./chrome/Tabs');
+var I18n         = _dereq_('./chrome/I18n');
+
 
 module.exports = Chrome;
 
@@ -24,9 +26,10 @@ Chrome.prototype.resetMock = function () {
   this.contextMenus = new ContextMenus(this);
   this.runtime      = new Runtime(this);
   this.tabs         = new Tabs(this);
+  this.i18n         = new I18n(this);
 };
 
-},{"./chrome/ContextMenus":4,"./chrome/Runtime":5,"./chrome/Tabs":6}],3:[function(_dereq_,module,exports){
+},{"./chrome/ContextMenus":4,"./chrome/I18n":5,"./chrome/Runtime":6,"./chrome/Tabs":7}],3:[function(_dereq_,module,exports){
 var sinon = _dereq_('sinon');
 
 module.exports = Event;
@@ -61,9 +64,10 @@ Event.prototype.trigger = function () {
   });
 };
 
-},{"sinon":11}],4:[function(_dereq_,module,exports){
+},{"sinon":13}],4:[function(_dereq_,module,exports){
 var Event = _dereq_('../Event');
 var sinon = _dereq_('sinon');
+
 module.exports = ContextMenus;
 
 /**
@@ -151,7 +155,97 @@ function ContextMenus(chrome) {
 
 }
 
-},{"../Event":3,"sinon":11}],5:[function(_dereq_,module,exports){
+},{"../Event":3,"sinon":13}],5:[function(_dereq_,module,exports){
+(function (process){
+var Event = _dereq_('../Event');
+var sinon = _dereq_('sinon');
+var path = _dereq_('path');
+
+/* CONSTANTS */
+
+// To use this library create a messages.json inside of your src folder
+// by default you can see that I am using  src/_locales/en/messages.json
+// if you _locales directory is in a different root directory simply change below
+
+var DEFAULT_FILENAME = path.join(process.cwd(), 'src', '_locales', 'en', 'messages.json');
+
+//change this to your locale
+var LOCALE =  'en_US';
+
+module.exports = i18n;
+/**
+ * Use the <code>chrome.i8n</code> to implement internationalization across your whole app or extension.
+ * @constructor
+ * @param {object} chrome
+ */
+function i18n (chrome) {
+    this.chrome = chrome;
+
+    //loads a file from your
+
+    this._locales = null;
+
+// todo implement this method
+//    /**
+//     * Gets the accept-languages of the browser. This is different from the locale
+//     * used by the browser; to get the locale, use
+//     *
+//     * @param {function} callback - Array of the accept languages of the browser, such as en-US,en,zh-CN
+//     */
+//    this.getAcceptLanguages = sinon.spy(function (callback){
+//
+//        if (typeof callback === 'function') {
+//            callback();
+//        }
+//
+//    });
+
+    /**
+     * Load default locales
+     */
+    this.loadDefaults = function () {
+      this._locales = _dereq_(DEFAULT_FILENAME);
+    };
+
+    /**
+     * Gets the localized string for the specified message. If the message is missing,
+     * this method returns an empty string (''). If the format of the getMessage() call
+     * is wrong — for example, messageName is not a string or the substitutions array
+     * has more than 9 elements — this method returns undefined.
+     *
+     * @param {integer} messageName - The name of the message, as specified in the messages.json file.
+     * @param {object} substitutions - Up to 9 substitution strings, if the message requires any.
+     * @returns {string}
+     */
+    this.getMessage = sinon.spy(function (messageName) {
+        //todo implement real '@@ui_locale' method - for now hard code to onstant
+        if(messageName === '@@ui_locale'){
+            return LOCALE;
+        }
+
+        var message = this._locales[messageName].message;
+
+        return message;
+    });
+
+// todo implement this method
+//    /**
+//     * Gets the browser UI language of the browser. This is different
+//     * from i18n.getAcceptLanguages which returns the preferred user languages.
+//     *
+//     * @param {integer} tabId
+//     * @param {object} connectInfo
+//     * @returns {undefined} A port that can be used to communicate with the content scripts running in th...
+//     */
+//    this.getUILanguage = sinon.spy(function (tabId, connectInfo){
+//
+//    });
+
+
+}
+
+}).call(this,_dereq_("JkpR2F"))
+},{"../Event":3,"JkpR2F":10,"path":9,"sinon":13}],6:[function(_dereq_,module,exports){
 var Event = _dereq_('../Event');
 var sinon = _dereq_('sinon');
 
@@ -213,7 +307,7 @@ function Runtime(chrome) {
    * @param {string} path A path to a resource within an app/extension expressed relative to its instal...
    * @returns {string} The fully-qualified URL to the resource.
    */
-  this.getURL = sinon.spy(function (path) {
+  this.getURL = sinon.spy(function () {
 
   });
 
@@ -223,7 +317,7 @@ function Runtime(chrome) {
    *
    * @param {string} url
    */
-  this.setUninstallURL = sinon.spy(function (url) {
+  this.setUninstallURL = sinon.spy(function () {
 
   });
 
@@ -269,7 +363,7 @@ function Runtime(chrome) {
    * @param {object} connectInfo
    * @returns {undefined} Port through which messages can be sent and received. The port's $(ref:runtim...
    */
-  this.connect = sinon.spy(function (extensionId, connectInfo) {
+  this.connect = sinon.spy(function () {
 
   });
 
@@ -426,7 +520,7 @@ function Runtime(chrome) {
 
 }
 
-},{"../Event":3,"sinon":11}],6:[function(_dereq_,module,exports){
+},{"../Event":3,"sinon":13}],7:[function(_dereq_,module,exports){
 var Event = _dereq_('../Event');
 var sinon = _dereq_('sinon');
 module.exports = Tabs;
@@ -478,7 +572,7 @@ function Tabs(chrome) {
    * @param {object} connectInfo
    * @returns {undefined} A port that can be used to communicate with the content scripts running in th...
    */
-  this.connect = sinon.spy(function (tabId, connectInfo) {
+  this.connect = sinon.spy(function (tabId) {
 
   });
 
@@ -584,7 +678,7 @@ function Tabs(chrome) {
   this.query = sinon.spy(function (queryInfo, callback) {
 
     if (typeof callback === 'function') {
-      callback([{id: 0, id: 1}]);
+      callback([{id: 0}]);
     }
 
   });
@@ -866,7 +960,7 @@ function Tabs(chrome) {
 
 }
 
-},{"../Event":3,"sinon":11}],7:[function(_dereq_,module,exports){
+},{"../Event":3,"sinon":13}],8:[function(_dereq_,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -891,7 +985,235 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],8:[function(_dereq_,module,exports){
+},{}],9:[function(_dereq_,module,exports){
+(function (process){
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+// resolves . and .. elements in a path array with directory names there
+// must be no slashes, empty elements, or device names (c:\) in the array
+// (so also no leading and trailing slashes - it does not distinguish
+// relative and absolute paths)
+function normalizeArray(parts, allowAboveRoot) {
+  // if the path tries to go above the root, `up` ends up > 0
+  var up = 0;
+  for (var i = parts.length - 1; i >= 0; i--) {
+    var last = parts[i];
+    if (last === '.') {
+      parts.splice(i, 1);
+    } else if (last === '..') {
+      parts.splice(i, 1);
+      up++;
+    } else if (up) {
+      parts.splice(i, 1);
+      up--;
+    }
+  }
+
+  // if the path is allowed to go above the root, restore leading ..s
+  if (allowAboveRoot) {
+    for (; up--; up) {
+      parts.unshift('..');
+    }
+  }
+
+  return parts;
+}
+
+// Split a filename into [root, dir, basename, ext], unix version
+// 'root' is just a slash, or nothing.
+var splitPathRe =
+    /^(\/?|)([\s\S]*?)((?:\.{1,2}|[^\/]+?|)(\.[^.\/]*|))(?:[\/]*)$/;
+var splitPath = function(filename) {
+  return splitPathRe.exec(filename).slice(1);
+};
+
+// path.resolve([from ...], to)
+// posix version
+exports.resolve = function() {
+  var resolvedPath = '',
+      resolvedAbsolute = false;
+
+  for (var i = arguments.length - 1; i >= -1 && !resolvedAbsolute; i--) {
+    var path = (i >= 0) ? arguments[i] : process.cwd();
+
+    // Skip empty and invalid entries
+    if (typeof path !== 'string') {
+      throw new TypeError('Arguments to path.resolve must be strings');
+    } else if (!path) {
+      continue;
+    }
+
+    resolvedPath = path + '/' + resolvedPath;
+    resolvedAbsolute = path.charAt(0) === '/';
+  }
+
+  // At this point the path should be resolved to a full absolute path, but
+  // handle relative paths to be safe (might happen when process.cwd() fails)
+
+  // Normalize the path
+  resolvedPath = normalizeArray(filter(resolvedPath.split('/'), function(p) {
+    return !!p;
+  }), !resolvedAbsolute).join('/');
+
+  return ((resolvedAbsolute ? '/' : '') + resolvedPath) || '.';
+};
+
+// path.normalize(path)
+// posix version
+exports.normalize = function(path) {
+  var isAbsolute = exports.isAbsolute(path),
+      trailingSlash = substr(path, -1) === '/';
+
+  // Normalize the path
+  path = normalizeArray(filter(path.split('/'), function(p) {
+    return !!p;
+  }), !isAbsolute).join('/');
+
+  if (!path && !isAbsolute) {
+    path = '.';
+  }
+  if (path && trailingSlash) {
+    path += '/';
+  }
+
+  return (isAbsolute ? '/' : '') + path;
+};
+
+// posix version
+exports.isAbsolute = function(path) {
+  return path.charAt(0) === '/';
+};
+
+// posix version
+exports.join = function() {
+  var paths = Array.prototype.slice.call(arguments, 0);
+  return exports.normalize(filter(paths, function(p, index) {
+    if (typeof p !== 'string') {
+      throw new TypeError('Arguments to path.join must be strings');
+    }
+    return p;
+  }).join('/'));
+};
+
+
+// path.relative(from, to)
+// posix version
+exports.relative = function(from, to) {
+  from = exports.resolve(from).substr(1);
+  to = exports.resolve(to).substr(1);
+
+  function trim(arr) {
+    var start = 0;
+    for (; start < arr.length; start++) {
+      if (arr[start] !== '') break;
+    }
+
+    var end = arr.length - 1;
+    for (; end >= 0; end--) {
+      if (arr[end] !== '') break;
+    }
+
+    if (start > end) return [];
+    return arr.slice(start, end - start + 1);
+  }
+
+  var fromParts = trim(from.split('/'));
+  var toParts = trim(to.split('/'));
+
+  var length = Math.min(fromParts.length, toParts.length);
+  var samePartsLength = length;
+  for (var i = 0; i < length; i++) {
+    if (fromParts[i] !== toParts[i]) {
+      samePartsLength = i;
+      break;
+    }
+  }
+
+  var outputParts = [];
+  for (var i = samePartsLength; i < fromParts.length; i++) {
+    outputParts.push('..');
+  }
+
+  outputParts = outputParts.concat(toParts.slice(samePartsLength));
+
+  return outputParts.join('/');
+};
+
+exports.sep = '/';
+exports.delimiter = ':';
+
+exports.dirname = function(path) {
+  var result = splitPath(path),
+      root = result[0],
+      dir = result[1];
+
+  if (!root && !dir) {
+    // No dirname whatsoever
+    return '.';
+  }
+
+  if (dir) {
+    // It has a dirname, strip trailing slash
+    dir = dir.substr(0, dir.length - 1);
+  }
+
+  return root + dir;
+};
+
+
+exports.basename = function(path, ext) {
+  var f = splitPath(path)[2];
+  // TODO: make this comparison case-insensitive on windows?
+  if (ext && f.substr(-1 * ext.length) === ext) {
+    f = f.substr(0, f.length - ext.length);
+  }
+  return f;
+};
+
+
+exports.extname = function(path) {
+  return splitPath(path)[3];
+};
+
+function filter (xs, f) {
+    if (xs.filter) return xs.filter(f);
+    var res = [];
+    for (var i = 0; i < xs.length; i++) {
+        if (f(xs[i], i, xs)) res.push(xs[i]);
+    }
+    return res;
+}
+
+// String.prototype.substr - negative index don't work in IE8
+var substr = 'ab'.substr(-1) === 'b'
+    ? function (str, start, len) { return str.substr(start, len) }
+    : function (str, start, len) {
+        if (start < 0) start = str.length + start;
+        return str.substr(start, len);
+    }
+;
+
+}).call(this,_dereq_("JkpR2F"))
+},{"JkpR2F":10}],10:[function(_dereq_,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -956,14 +1278,14 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-},{}],9:[function(_dereq_,module,exports){
+},{}],11:[function(_dereq_,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],10:[function(_dereq_,module,exports){
+},{}],12:[function(_dereq_,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -1553,7 +1875,7 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,_dereq_("JkpR2F"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":9,"JkpR2F":8,"inherits":7}],11:[function(_dereq_,module,exports){
+},{"./support/isBuffer":11,"JkpR2F":10,"inherits":8}],13:[function(_dereq_,module,exports){
 /*jslint eqeqeq: false, onevar: false, forin: true, nomen: false, regexp: false, plusplus: false*/
 /*global module, require, __dirname, document*/
 /**
@@ -1938,7 +2260,7 @@ var sinon = (function (formatio) {
     return sinon;
 }(typeof formatio == "object" && formatio));
 
-},{"./sinon/assert":12,"./sinon/behavior":13,"./sinon/call":14,"./sinon/collection":15,"./sinon/match":16,"./sinon/mock":17,"./sinon/sandbox":18,"./sinon/spy":19,"./sinon/stub":20,"./sinon/test":21,"./sinon/test_case":22,"formatio":24,"util":10}],12:[function(_dereq_,module,exports){
+},{"./sinon/assert":14,"./sinon/behavior":15,"./sinon/call":16,"./sinon/collection":17,"./sinon/match":18,"./sinon/mock":19,"./sinon/sandbox":20,"./sinon/spy":21,"./sinon/stub":22,"./sinon/test":23,"./sinon/test_case":24,"formatio":26,"util":12}],14:[function(_dereq_,module,exports){
 (function (global){
 /**
  * @depend ../sinon.js
@@ -2141,7 +2463,7 @@ var sinon = (function (formatio) {
 }(typeof sinon == "object" && sinon || null, typeof window != "undefined" ? window : (typeof self != "undefined") ? self : global));
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../sinon":11}],13:[function(_dereq_,module,exports){
+},{"../sinon":13}],15:[function(_dereq_,module,exports){
 (function (process){
 /**
  * @depend ../sinon.js
@@ -2479,7 +2801,7 @@ var sinon = (function (formatio) {
 }(typeof sinon == "object" && sinon || null));
 
 }).call(this,_dereq_("JkpR2F"))
-},{"../sinon":11,"JkpR2F":8}],14:[function(_dereq_,module,exports){
+},{"../sinon":13,"JkpR2F":10}],16:[function(_dereq_,module,exports){
 /**
   * @depend ../sinon.js
   * @depend match.js
@@ -2686,7 +3008,7 @@ var sinon = (function (formatio) {
 }(typeof sinon == "object" && sinon || null));
 
 
-},{"../sinon":11}],15:[function(_dereq_,module,exports){
+},{"../sinon":13}],17:[function(_dereq_,module,exports){
 /**
  * @depend ../sinon.js
  * @depend stub.js
@@ -2843,7 +3165,7 @@ var sinon = (function (formatio) {
     }
 }(typeof sinon == "object" && sinon || null));
 
-},{"../sinon":11}],16:[function(_dereq_,module,exports){
+},{"../sinon":13}],18:[function(_dereq_,module,exports){
 /* @depend ../sinon.js */
 /*jslint eqeqeq: false, onevar: false, plusplus: false*/
 /*global module, require, sinon*/
@@ -3090,7 +3412,7 @@ var sinon = (function (formatio) {
     }
 }(typeof sinon == "object" && sinon || null));
 
-},{"../sinon":11}],17:[function(_dereq_,module,exports){
+},{"../sinon":13}],19:[function(_dereq_,module,exports){
 /**
  * @depend ../sinon.js
  * @depend stub.js
@@ -3543,7 +3865,7 @@ var sinon = (function (formatio) {
     }
 }(typeof sinon == "object" && sinon || null));
 
-},{"../sinon":11,"./match":16}],18:[function(_dereq_,module,exports){
+},{"../sinon":13,"./match":18}],20:[function(_dereq_,module,exports){
 /**
  * @depend ../sinon.js
  * @depend collection.js
@@ -3689,7 +4011,7 @@ if (typeof module !== "undefined" && module.exports && typeof _dereq_ == "functi
     }
 }());
 
-},{"../sinon":11,"./util/fake_timers":23}],19:[function(_dereq_,module,exports){
+},{"../sinon":13,"./util/fake_timers":25}],21:[function(_dereq_,module,exports){
 /**
   * @depend ../sinon.js
   * @depend call.js
@@ -4108,7 +4430,7 @@ if (typeof module !== "undefined" && module.exports && typeof _dereq_ == "functi
     }
 }(typeof sinon == "object" && sinon || null));
 
-},{"../sinon":11}],20:[function(_dereq_,module,exports){
+},{"../sinon":13}],22:[function(_dereq_,module,exports){
 /**
  * @depend ../sinon.js
  * @depend spy.js
@@ -4271,7 +4593,7 @@ if (typeof module !== "undefined" && module.exports && typeof _dereq_ == "functi
     }
 }(typeof sinon == "object" && sinon || null));
 
-},{"../sinon":11}],21:[function(_dereq_,module,exports){
+},{"../sinon":13}],23:[function(_dereq_,module,exports){
 /**
  * @depend ../sinon.js
  * @depend stub.js
@@ -4358,7 +4680,7 @@ if (typeof module !== "undefined" && module.exports && typeof _dereq_ == "functi
     }
 }(typeof sinon == "object" && sinon || null));
 
-},{"../sinon":11}],22:[function(_dereq_,module,exports){
+},{"../sinon":13}],24:[function(_dereq_,module,exports){
 /**
  * @depend ../sinon.js
  * @depend test.js
@@ -4459,7 +4781,7 @@ if (typeof module !== "undefined" && module.exports && typeof _dereq_ == "functi
     }
 }(typeof sinon == "object" && sinon || null));
 
-},{"../sinon":11}],23:[function(_dereq_,module,exports){
+},{"../sinon":13}],25:[function(_dereq_,module,exports){
 (function (global){
 /*jslint eqeqeq: false, plusplus: false, evil: true, onevar: false, browser: true, forin: false*/
 /*global module, require, window*/
@@ -4872,7 +5194,7 @@ if (typeof module !== 'undefined' && module.exports) {
 }
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],24:[function(_dereq_,module,exports){
+},{}],26:[function(_dereq_,module,exports){
 (function (global){
 ((typeof define === "function" && define.amd && function (m) {
     define("formatio", ["samsam"], m);
@@ -5075,7 +5397,7 @@ if (typeof module !== 'undefined' && module.exports) {
 });
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"samsam":25}],25:[function(_dereq_,module,exports){
+},{"samsam":27}],27:[function(_dereq_,module,exports){
 ((typeof define === "function" && define.amd && function (m) { define("samsam", m); }) ||
  (typeof module === "object" &&
       function (m) { module.exports = m(); }) || // Node

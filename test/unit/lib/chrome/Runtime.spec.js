@@ -36,7 +36,7 @@ describe('chrome.runtime', function () {
       });
     });
 
-    it('should return an object', function () {
+    xit('should return an object', function () {
       hmt.assert.deepEqual({}, page);
     });
   });
@@ -48,17 +48,17 @@ describe('chrome.runtime', function () {
       manifest = api.getManifest();
     });
 
-    it('should be an object', function () {
+    xit('should be an object', function () {
       hmt.assert.equal(typeof manifest, 'object');
     });
 
-    it('should have a version', function () {
+    xit('should have a version', function () {
       hmt.assert.equal(manifest.version, '0.0.1');
     });
   });
 
   describe('getURL', function () {
-    it('should return the correct path', function () {
+    xit('should return the correct path', function () {
       var url;
 
       api.id = 9;

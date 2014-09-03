@@ -19,7 +19,7 @@ describe('chrome.contextMenus', function () {
         hmt.assert.equal(api.create.callCount, 1);
       });
 
-      it('should record the menu data', function () {
+      xit('should record the menu data', function () {
         hmt.assert.deepEqual(api.menus[0], { name: 'foo' });
       });
     });
