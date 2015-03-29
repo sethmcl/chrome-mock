@@ -1,13 +1,13 @@
-var ContextMenus = hmt.lib('chrome', 'ContextMenus');
+var Tabs = hmt.lib('chrome', 'Tabs');
 
-describe('chrome.contextMenus', function () {
+describe('chrome.tabs', function () {
   var api;
 
   beforeEach(function () {
-    api = new ContextMenus();
+    api = new Tabs();
   });
 
-  describe('create', function () {
+  describe('get', function () {
     var cb = hmt.spy();
 
     describe('with callback', function () {
@@ -17,10 +17,6 @@ describe('chrome.contextMenus', function () {
 
       it('should provide spy functionality', function () {
         hmt.assert.equal(api.create.callCount, 1);
-      });
-
-      xit('should record the menu data', function () {
-        hmt.assert.deepEqual(api.menus[0], { name: 'foo' });
       });
     });
 
