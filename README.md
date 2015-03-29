@@ -11,8 +11,10 @@ npm install chrome-mock
 
 # usage
 
+In most cases you will want to set this as a global at the top of your test file, because chrome is a global in your extension code.
+
 ```
-var chrome = require('chrome-mock')
+chrome = require('chrome-mock')
 ```
 
 # i18n
