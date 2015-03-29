@@ -1,5 +1,5 @@
 {
-  "fixture": {
+  "test": {
     "message": "test",
     "description": "test"
   }
