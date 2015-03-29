@@ -1,39 +1,48 @@
-var ContextMenus = hmt.lib('chrome', 'ContextMenus');
+var I18n = hmt.lib('chrome', 'I18n');
+var path = require('path');
 
-describe('chrome.contextMenus', function () {
+describe('chrome.I18n', function () {
   var api;
 
   beforeEach(function () {
-    api = new ContextMenus();
+    api = new I18n();
   });
 
-  describe('create', function () {
+  describe('getMessage', function(){
     var cb = hmt.spy();
 
     describe('with callback', function () {
-      beforeEach(function () {
-        api.create({ name: 'foo' }, cb);
-      });
 
       it('should provide spy functionality', function () {
-        hmt.assert.equal(api.create.callCount, 1);
-      });
-
-      it('should record the menu data', function () {
-        hmt.assert.deepEqual(api.menus[0], { name: 'foo' });
+        var test = api.getMessage('test');
+        hmt.assert(test, 'test');
       });
     });
-
-    describe('without callback', function () {
-      beforeEach(function () {
-        api.create({ name: 'foo' });
-      });
-
-      it('should provide spy functionality', function () {
-        hmt.assert.equal(api.create.callCount, 1);
-      });
-
-    });
-
   });
+
+
+  describe('_locales', function(){
+      it('should provide spy functionality', function () {
+        var test = api._locales;
+        hmt.assert(test.test.message === 'test', 'make sure messages.json has test');
+      });
+  });
+
+
+  describe('setLocale', function(){
+    it('should set a local without error', function () {
+      var test = api.setLocale('GB');
+      hmt.assert(!test, 'test without error');
+    });
+  });
+
+  describe('setMessagesPath', function(){
+    it('should set a setMessagesPath different from default', function () {
+      var dir = path.join(__dirname, '/../../../fixtures/messages.json');
+      api.setMessagesPath(dir);
+      var test = api._locales;
+      hmt.assert(test.fixture.message === 'test', 'test without error');
+    });
+  });
+
 });
