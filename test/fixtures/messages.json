@@ -2,5 +2,9 @@
   "fixture": {
     "message": "test",
     "description": "test"
+  },
+  "test": {
+    "message": "test",
+    "description": "test"
   }
 }
