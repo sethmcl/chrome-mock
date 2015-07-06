@@ -2,11 +2,13 @@
   "name": "chrome-mock",
   "version": "0.0.9",
   "author": "Steven Foote & Seth McLaughlin",
+  "repository": "sethmcl/chrome-mock",
   "license": "MIT",
   "scripts": {
     "test": "./node_modules/.bin/grunt"
   },
   "dependencies": {
+    "lodash": "^2.4.1",
     "require-dir": "^0.1.0",
     "sinon": "^1.10.3",
     "rfile": "~1.0.0"
@@ -21,7 +23,6 @@
     "grunt-jsdoc": "^0.5.4",
     "grunt-mocha-istanbul": "^1.4.1",
     "grunt-mocha-test": "^0.10.2",
-    "lodash": "^2.4.1",
     "underscore.string": "^2.3.3",
     "mocha": "~1.18.2",
     "coveralls": "~2.10.0",
