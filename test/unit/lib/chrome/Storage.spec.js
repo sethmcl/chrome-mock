@@ -123,6 +123,36 @@ describe('chrome.storage', function () {
     });
   });
 
+  describe('storage data isolation', function () {
+    var mock;
+
+    before(function () {
+      api = new Storage();
+      mock = {
+        alpha: { user: { name: 'Hamburglar', pass: 'r0bbl3r0bble' } },
+        isNew: true
+      };
+    });
+
+    it('modifying original data after storing should not alter data in storage', function (done) {
+      api.sync.set(mock, function () {
+        mock.alpha.user.name = 'Grimmace';
+        hmt.assert.notEqual(mock.alpha.user.name, api.sync._store.alpha.user.name);
+        done();
+      });
+    });
+
+    it('modifying results should not alter the data in storage', function (done) {
+      api.sync.set(mock, function () {
+        api.sync.get(['alpha'], function (result) {
+          result.alpha.user.name = 'Ronald';
+          hmt.assert.notEqual(api.sync._store.alpha.user.name, 'Ronald');
+          done();
+        });
+      });
+    });
+  });
+
   describe('remove()', function () {
     beforeEach(function (done) {
       api = new Storage();
