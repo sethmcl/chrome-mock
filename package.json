@@ -2,6 +2,10 @@
   "name": "chrome-mock",
   "version": "0.0.9",
   "author": "Steven Foote & Seth McLaughlin",
+  "keywords": [
+    "webext",
+    "chrome"
+  ],
   "license": "MIT",
   "scripts": {
     "test": "./node_modules/.bin/grunt"
