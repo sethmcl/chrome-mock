@@ -2,6 +2,10 @@
   "name": "chrome-mock",
   "version": "0.0.9",
   "author": "Steven Foote & Seth McLaughlin",
+  "repository": "git://github.com/sethmcl/chrome-mock.git",
+  "bugs": {
+    "url": "https://github.com/sethmcl/chrome-mock/issues"
+  },
   "license": "MIT",
   "scripts": {
     "test": "./node_modules/.bin/grunt"
